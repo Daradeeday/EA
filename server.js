@@ -18,6 +18,9 @@ const PORT = process.env.PORT || 3000;
 const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 const LINE_USER_ID = process.env.LINE_USER_ID;
 const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
+const GOOGLE_SCRIPT_SECRET = process.env.GOOGLE_SCRIPT_SECRET;
+const EA_VERSION = process.env.EA_VERSION || "1.0.0";
+const EA_PRESET = process.env.EA_PRESET || "default";
 
 // ------------------------------
 // Helpers
@@ -206,6 +209,7 @@ app.get("/test-line", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
 
 
 
