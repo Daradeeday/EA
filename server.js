@@ -211,12 +211,12 @@ app.get("/test-line", async (req, res) => {
 
 
 
-setInterval(refresh, 5000);
-refresh();
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
 
 
 
