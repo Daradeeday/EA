@@ -209,9 +209,40 @@ app.get("/test-line", async (req, res) => {
 }
 });
 
+async function refresh() {
+  try {
+    const res = await fetch("/dashboard/summary", { cache: "no-store" });
+    const data = await res.json();
+
+    // ถ้า server ตอบ ok แต่ข้อมูลว่าง ให้คงของเดิมไว้
+    const hasRealData =
+      data?.latestStatus != null ||
+      (Array.isArray(data?.latestTrades) && data.latestTrades.length > 0) ||
+      (Array.isArray(data?.latestAlerts) && data.latestAlerts.length > 0);
+
+    if (hasRealData) {
+      render(data); // อัปเดต UI จาก data
+      localStorage.setItem("ea_snapshot", JSON.stringify(data));
+    } else {
+      // fallback: ใช้ snapshot เก่า
+      const snap = localStorage.getItem("ea_snapshot");
+      if (snap) render(JSON.parse(snap));
+      // ถ้าไม่มี snapshot จริง ๆ ค่อยโชว์ว่าง
+    }
+  } catch (e) {
+    // ถ้า fetch error ก็ใช้ snapshot เก่า
+    const snap = localStorage.getItem("ea_snapshot");
+    if (snap) render(JSON.parse(snap));
+  }
+}
+
+setInterval(refresh, 5000);
+refresh();
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
 
 
 
