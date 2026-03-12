@@ -56,8 +56,11 @@ async function sendToGoogleSheet(route, payload) {
   await axios.post(
     GOOGLE_SCRIPT_URL,
     {
+      secret: GOOGLE_SCRIPT_SECRET,
       route,
-      ...payload,
+      eaVersion: EA_VERSION,
+      presetName: EA_PRESET,
+      ...payload
     },
     {
       headers: {
@@ -209,6 +212,7 @@ app.get("/test-line", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
 
 
 
