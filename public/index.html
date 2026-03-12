@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8" />
+    <title>EA Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #eee;
+            padding: 20px;
+        }
+
+        .card {
+            background: #1b1b1b;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>EA Dashboard</h1>
+    <div class="card">
+        <h2>Latest Status</h2>
+        <pre id="status"></pre>
+    </div>
+    <div class="card">
+        <h2>Latest Trades</h2>
+        <pre id="trades"></pre>
+    </div>
+    <div class="card">
+        <h2>Latest Alerts</h2>
+        <pre id="alerts"></pre>
+    </div>
+
+    <script>
+        async function loadData() {
+            const res = await fetch("/dashboard/summary");
+            const data = await res.json();
+            document.getElementById("status").textContent =
+                JSON.stringify(data.latestStatus, null, 2);
+            document.getElementById("trades").textContent =
+                JSON.stringify(data.latestTrades, null, 2);
+            document.getElementById("alerts").textContent =
+                JSON.stringify(data.latestAlerts, null, 2);
+        }
+
+        loadData();
+        setInterval(loadData, 5000);
+    </script>
+</body>
+
+</html>
