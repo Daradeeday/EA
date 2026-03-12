@@ -47,21 +47,25 @@ async function pushLineMessage(text) {
   );
 }
 
-async function sendToGoogleSheet(route, payload) {
-  if (!GOOGLE_SCRIPT_URL) return;
+// async function sendToGoogleSheet(route, payload) {
+//   if (!GOOGLE_SCRIPT_URL) return;
 
-  await axios.post(
-    GOOGLE_SCRIPT_URL,
-    {
-      route,
-      ...payload,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+//   await axios.post(
+//     GOOGLE_SCRIPT_URL,
+//     {
+//       route,
+//       ...payload,
+//     },
+//     {
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
+// }
+async function sendToGoogleSheet(route, payload) {
+  console.log("GoogleSheet disabled test:", route, payload);
+  return;
 }
 
 function safePush(arr, item, max = 1000) {
@@ -205,5 +209,6 @@ app.get("/test-line", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
 
 
