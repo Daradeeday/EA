@@ -55,14 +55,17 @@ app.get("/health", (req, res) => {
 });
 
 app.post("/status", async (req, res) => {
-    try {
-        const payload = { ...req.body, ts: new Date().toISOString() };
-        statuses.push(payload);
-        if (statuses.length > 500) statuses.shift();
-        res.json({ ok: true });
-    } catch (e) {
-        res.status(500).json({ ok: false, error: e.message });
-    }
+  try {
+    const payload = { ...req.body, ts: new Date().toISOString() };
+    statuses.push(payload);
+    if (statuses.length > 500) statuses.shift();
+
+    await sendToGoogleSheet("status", payload);
+
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
 });
 
 app.post("/trade/open", async (req, res) => {
@@ -149,6 +152,7 @@ app.get("/test-line", async (req, res) => {
     res.status(500).json({ ok: false, error: e.message });
   }
 });
+
 
 
 
