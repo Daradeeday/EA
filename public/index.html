@@ -3,54 +3,481 @@
 
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>EA Dashboard</title>
     <style>
+        :root {
+            --bg: #0b1020;
+            --bg-soft: rgba(255, 255, 255, 0.06);
+            --panel: rgba(15, 23, 42, 0.82);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --text: #e5ecff;
+            --muted: #9fb0d4;
+            --accent: #60a5fa;
+            --accent-2: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
         body {
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: #eee;
-            padding: 20px;
+            margin: 0;
+            min-height: 100%;
+            font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(96, 165, 250, 0.22), transparent 28%),
+                radial-gradient(circle at top right, rgba(34, 197, 94, 0.18), transparent 24%),
+                linear-gradient(180deg, #08101f 0%, #0f172a 100%);
+            color: var(--text);
         }
 
-        .card {
-            background: #1b1b1b;
+        body {
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+            padding: 22px 24px;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(15, 23, 42, 0.86));
+            border: 1px solid var(--panel-border);
+            border-radius: 26px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(1.7rem, 3vw, 2.7rem);
+            letter-spacing: -0.03em;
+        }
+
+        .hero p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--accent-2);
+            box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.15);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .stat-card,
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .stat-card {
+            padding: 18px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.92rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: clamp(1.25rem, 2vw, 1.9rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 18px;
+        }
+
+        .stack {
+            display: grid;
+            gap: 18px;
+        }
+
+        .panel {
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 1.02rem;
+        }
+
+        .panel-subtitle {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .panel-body {
+            padding: 18px 20px 20px;
+        }
+
+        .key-value {
+            display: grid;
+            gap: 12px;
+        }
+
+        .kv-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: var(--bg-soft);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .kv-key {
+            color: var(--muted);
+            text-transform: capitalize;
+        }
+
+        .kv-value {
+            font-weight: 600;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .list-item {
+            padding: 14px;
+            border-radius: 16px;
+            background: var(--bg-soft);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .item-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-weight: 700;
+        }
+
+        .item-meta {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .pill {
+            flex-shrink: 0;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: rgba(96, 165, 250, 0.16);
+            color: #cfe4ff;
+            border: 1px solid rgba(96, 165, 250, 0.18);
+        }
+
+        .pill.warning {
+            background: rgba(245, 158, 11, 0.18);
+            color: #fde2a8;
+            border-color: rgba(245, 158, 11, 0.18);
+        }
+
+        .pill.danger {
+            background: rgba(239, 68, 68, 0.18);
+            color: #fecaca;
+            border-color: rgba(239, 68, 68, 0.18);
+        }
+
+        .empty {
             padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
+            text-align: center;
+            color: var(--muted);
+            background: var(--bg-soft);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
         }
 
-        pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
+        .footer-note {
+            margin-top: 18px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 14px;
+            }
+
+            .hero,
+            .panel-header,
+            .panel-body,
+            .stat-card {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .item-top,
+            .kv-row,
+            .hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .kv-value {
+                text-align: left;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>EA Dashboard</h1>
-    <div class="card">
-        <h2>Latest Status</h2>
-        <pre id="status"></pre>
-    </div>
-    <div class="card">
-        <h2>Latest Trades</h2>
-        <pre id="trades"></pre>
-    </div>
-    <div class="card">
-        <h2>Latest Alerts</h2>
-        <pre id="alerts"></pre>
+    <div class="container">
+        <section class="hero">
+            <div>
+                <h1>EA Trading Dashboard</h1>
+                <p>มุมมองสรุปสถานะ EA แบบเรียลไทม์ แสดงสถานะล่าสุด รายการเทรด และการแจ้งเตือนในรูปแบบที่อ่านง่าย ดูดี และใช้งานได้ดีทั้งบนคอมและมือถือ</p>
+            </div>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span id="connectionStatus">กำลังเชื่อมต่อข้อมูล...</span>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-label">สถานะล่าสุด</div>
+                <div class="stat-value" id="statusCount">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">จำนวนเทรดล่าสุด</div>
+                <div class="stat-value" id="tradesCount">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">จำนวนแจ้งเตือน</div>
+                <div class="stat-value" id="alertsCount">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">อัปเดตล่าสุด</div>
+                <div class="stat-value" id="lastUpdated">-</div>
+            </div>
+        </section>
+
+        <section class="grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2 class="panel-title">Latest Status</h2>
+                        <div class="panel-subtitle">รายละเอียดสถานะ EA ล่าสุด</div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="key-value" id="status"></div>
+                </div>
+            </div>
+
+            <div class="stack">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title">Latest Trades</h2>
+                            <div class="panel-subtitle">รายการเทรดล่าสุด</div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="list" id="trades"></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <h2 class="panel-title">Latest Alerts</h2>
+                            <div class="panel-subtitle">การแจ้งเตือนและเหตุการณ์ล่าสุด</div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="list" id="alerts"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer-note">Auto refresh ทุก 5 วินาที</div>
     </div>
 
     <script>
+        function formatValue(value) {
+            if (value === null || value === undefined || value === '') return '-';
+            if (typeof value === 'object') return JSON.stringify(value);
+            return String(value);
+        }
+
+        function formatTime(date = new Date()) {
+            return new Intl.DateTimeFormat('th-TH', {
+                dateStyle: 'short',
+                timeStyle: 'medium'
+            }).format(date);
+        }
+
+        function createStatusView(data) {
+            const container = document.getElementById('status');
+            if (!data || typeof data !== 'object' || Array.isArray(data) && data.length === 0) {
+                container.innerHTML = '<div class="empty">ยังไม่มีข้อมูลสถานะ</div>';
+                return;
+            }
+
+            const entries = Array.isArray(data)
+                ? data.map((value, index) => [index + 1, value])
+                : Object.entries(data);
+
+            container.innerHTML = entries.map(([key, value]) => `
+                <div class="kv-row">
+                    <div class="kv-key">${key}</div>
+                    <div class="kv-value">${formatValue(value)}</div>
+                </div>
+            `).join('');
+        }
+
+        function detectPillClass(text) {
+            const value = String(text || '').toLowerCase();
+            if (value.includes('error') || value.includes('fail') || value.includes('loss') || value.includes('sell')) return 'danger';
+            if (value.includes('warn') || value.includes('pending')) return 'warning';
+            return '';
+        }
+
+        function createListView(elementId, items, type) {
+            const container = document.getElementById(elementId);
+            if (!items || !items.length) {
+                container.innerHTML = `<div class="empty">ยังไม่มีข้อมูล${type === 'trade' ? 'เทรด' : 'แจ้งเตือน'}</div>`;
+                return;
+            }
+
+            container.innerHTML = items.map((item, index) => {
+                if (typeof item !== 'object' || item === null) {
+                    return `
+                        <div class="list-item">
+                            <div class="item-title">${formatValue(item)}</div>
+                        </div>`;
+                }
+
+                const entries = Object.entries(item);
+                const titleEntry = entries[0] || ['Item', `#${index + 1}`];
+                const badgeText = item.type || item.side || item.status || titleEntry[1] || `#${index + 1}`;
+                const meta = entries.slice(1, 5).map(([k, v]) => `${k}: ${formatValue(v)}`).join(' • ');
+
+                return `
+                    <div class="list-item">
+                        <div class="item-top">
+                            <div>
+                                <div class="item-title">${titleEntry[0]}: ${formatValue(titleEntry[1])}</div>
+                                <div class="item-meta">${meta || 'ไม่มีรายละเอียดเพิ่มเติม'}</div>
+                            </div>
+                            <div class="pill ${detectPillClass(badgeText)}">${formatValue(badgeText)}</div>
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
         async function loadData() {
-            const res = await fetch("/dashboard/summary");
-            const data = await res.json();
-            document.getElementById("status").textContent =
-                JSON.stringify(data.latestStatus, null, 2);
-            document.getElementById("trades").textContent =
-                JSON.stringify(data.latestTrades, null, 2);
-            document.getElementById("alerts").textContent =
-                JSON.stringify(data.latestAlerts, null, 2);
+            const connectionStatus = document.getElementById('connectionStatus');
+            try {
+                const res = await fetch('/dashboard/summary');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                const latestStatus = data.latestStatus || {};
+                const latestTrades = Array.isArray(data.latestTrades) ? data.latestTrades : [];
+                const latestAlerts = Array.isArray(data.latestAlerts) ? data.latestAlerts : [];
+
+                createStatusView(latestStatus);
+                createListView('trades', latestTrades, 'trade');
+                createListView('alerts', latestAlerts, 'alert');
+
+                document.getElementById('statusCount').textContent = Array.isArray(latestStatus)
+                    ? latestStatus.length
+                    : Object.keys(latestStatus).length || 0;
+                document.getElementById('tradesCount').textContent = latestTrades.length;
+                document.getElementById('alertsCount').textContent = latestAlerts.length;
+                document.getElementById('lastUpdated').textContent = formatTime();
+                connectionStatus.textContent = 'เชื่อมต่อข้อมูลสำเร็จ';
+            } catch (error) {
+                document.getElementById('status').innerHTML = '<div class="empty">โหลดข้อมูลสถานะไม่สำเร็จ</div>';
+                document.getElementById('trades').innerHTML = '<div class="empty">โหลดข้อมูลเทรดไม่สำเร็จ</div>';
+                document.getElementById('alerts').innerHTML = '<div class="empty">โหลดข้อมูลแจ้งเตือนไม่สำเร็จ</div>';
+                connectionStatus.textContent = 'เชื่อมต่อข้อมูลไม่สำเร็จ';
+                console.error(error);
+            }
         }
 
         loadData();
