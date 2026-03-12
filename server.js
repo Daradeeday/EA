@@ -154,9 +154,13 @@ app.post("/alert", async (req, res) => {
 
     res.json({ ok: true });
   } catch (e) {
-    console.error("POST /alert error:", e.message);
-    res.status(500).json({ ok: false, error: e.message });
-  }
+  console.error("ERROR:", e.response ? e.response.data : e.message);
+  res.status(500).json({
+    ok: false,
+    error: e.message,
+    detail: e.response ? e.response.data : null
+  });
+}
 });
 
 app.get("/dashboard/summary", (req, res) => {
@@ -189,3 +193,4 @@ app.get("/test-line", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
