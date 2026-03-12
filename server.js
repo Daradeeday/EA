@@ -39,6 +39,16 @@ async function pushLineMessage(text) {
         }
     );
 }
+const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
+
+async function sendToGoogleSheet(route, payload) {
+  if (!GOOGLE_SCRIPT_URL) return;
+
+  await axios.post(GOOGLE_SCRIPT_URL, {
+    route,
+    ...payload
+  });
+}
 
 app.get("/health", (req, res) => {
     res.json({ ok: true, message: "server running" });
@@ -139,5 +149,7 @@ app.get("/test-line", async (req, res) => {
     res.status(500).json({ ok: false, error: e.message });
   }
 });
+
+
 
 
