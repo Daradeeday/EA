@@ -113,9 +113,13 @@ app.post("/trade/open", async (req, res) => {
 
     res.json({ ok: true });
   } catch (e) {
-    console.error("POST /trade/open error:", e.message);
-    res.status(500).json({ ok: false, error: e.message });
-  }
+  console.error("ERROR:", e.response ? e.response.data : e.message);
+  res.status(500).json({
+    ok: false,
+    error: e.message,
+    detail: e.response ? e.response.data : null
+  });
+}
 });
 
 app.post("/trade/close", async (req, res) => {
@@ -137,9 +141,13 @@ app.post("/trade/close", async (req, res) => {
 
     res.json({ ok: true });
   } catch (e) {
-    console.error("POST /trade/close error:", e.message);
-    res.status(500).json({ ok: false, error: e.message });
-  }
+  console.error("ERROR:", e.response ? e.response.data : e.message);
+  res.status(500).json({
+    ok: false,
+    error: e.message,
+    detail: e.response ? e.response.data : null
+  });
+}
 });
 
 app.post("/alert", async (req, res) => {
@@ -185,12 +193,17 @@ app.get("/test-line", async (req, res) => {
     await pushLineMessage("ทดสอบส่งข้อความจาก server สำเร็จ");
     res.json({ ok: true });
   } catch (e) {
-    console.error("GET /test-line error:", e.message);
-    res.status(500).json({ ok: false, error: e.message });
-  }
+  console.error("ERROR:", e.response ? e.response.data : e.message);
+  res.status(500).json({
+    ok: false,
+    error: e.message,
+    detail: e.response ? e.response.data : null
+  });
+}
 });
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
 
