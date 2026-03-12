@@ -131,3 +131,13 @@ app.post("/webhook", (req, res) => {
     res.sendStatus(200);
 });
 
+app.get("/test-line", async (req, res) => {
+  try {
+    await pushLineMessage("ทดสอบส่งข้อความจาก server สำเร็จ");
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
+
